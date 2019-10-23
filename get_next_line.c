@@ -6,16 +6,31 @@
 /*   By: ggorilla <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 18:40:55 by ggorilla          #+#    #+#             */
-/*   Updated: 2019/10/16 20:31:18 by ggorilla         ###   ########.fr       */
+/*   Updated: 2019/10/23 23:12:37 by ggorilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//написать инклуд и что-то про бафсайз
+
 int get_next_line(const int fd, char **line)
 {
-	if (ft_strchr(new[fd], "\n"))
-		*line = ft_strdup(new[fd]); // дописать, чтобы считывало до \n!!!
+	static int	i;
+	char		buf[BUFF_SIZE];
+	char		*new;
+
+	i = 0;
+	**line = '\0';
+	*new = '\0';
+	while (!ft_strchr(new[fd], "\n"))
+	{
+		while (read(fd, &buf, BUFF_SIZE)) //??? очень спорно
+		{
+			read(fd, &buf, BUFF_SIZE);
+			new = ft_strjoin(new, &buf);
+		}
+	}
 	else
-		read(fd, buf, BUFF_SIZE);
+		*line = ft_strjoin(*line, new[fd]); // дописать, чтобы считывало до \n!!!
 
 /*
  1) считываем в buf кусок файла размером BUFF_SIZE;
