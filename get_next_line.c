@@ -6,7 +6,7 @@
 /*   By: ggorilla <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 18:40:55 by ggorilla          #+#    #+#             */
-/*   Updated: 2019/10/23 23:12:37 by ggorilla         ###   ########.fr       */
+/*   Updated: 2019/10/28 22:17:42 by ggorilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,33 @@
 
 int get_next_line(const int fd, char **line)
 {
-	static int	i;
 	char		buf[BUFF_SIZE];
-	char		*new;
+	static char	*new[12000];
+	int			sizeofline;
 
-	i = 0;
-	**line = '\0';
-	*new = '\0';
-	while (!ft_strchr(new[fd], "\n"))
+	//случай с концоом строки
+	//**line = '\0';
+	while (!ft_strchr(new[fd], "\n") && read(fd, &buf, BUFF_SIZE))
+		new[fd] = ft_strjoin(new[fd], &buf);  //освободить память???
+	*line = ft_strdup(new[fd]);
+	sizeofline = ft_strlen(*line);
+	while (*line[sizeofline] != '\n')
 	{
-		while (read(fd, &buf, BUFF_SIZE)) //??? очень спорно
-		{
-			read(fd, &buf, BUFF_SIZE);
-			new = ft_strjoin(new, &buf);
-		}
-	}
-	else
-		*line = ft_strjoin(*line, new[fd]); // дописать, чтобы считывало до \n!!!
+		*line[sizeofline - 1] = '\0';
+		sizeofline --;
+	} //стираем с line все, что после \n, включая этот \n; можно вынести в отдельную функцию
+	while (*new[fd] != '\n') //если нет \n???
+		new[fd]++;
+	new[fd]++; //стираем с new все до \n вместе с ним
+
+	
 
 /*
  1) считываем в buf кусок файла размером BUFF_SIZE;
- 2) buf перекидываем в new[fd];
- ! повторяем эти действия, приписывая в new[fd] новые bufы, ПОКА в new[fd] не окажется \n;
+ 2) buf перекидываем в new;
+ ! повторяем эти действия, приписывая в new новые bufы, ПОКА в new[fd] не окажется \n;
  3) когда в new[fd] встретился символ \n, переписываем все до этого символа в line;
  4) стираем в new[fd] все до символа \n, включая его;
  ! повторяем
  */
-
-
 }
