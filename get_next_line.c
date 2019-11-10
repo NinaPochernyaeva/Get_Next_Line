@@ -6,32 +6,45 @@
 /*   By: ggorilla <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 18:40:55 by ggorilla          #+#    #+#             */
-/*   Updated: 2019/11/10 19:47:12 by ggorilla         ###   ########.fr       */
+/*   Updated: 2019/11/10 20:52:50 by ggorilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //написать инклуд и что-то про бафсайз
 
-int get_next_line(const int fd, char **line)
-{
-	char		buf[BUFF_SIZE];
-	static char	*new[12000];
-	int			sizeofline;
-	int			i;
+char		buf[BUFF_SIZE];
+static char	*new[12000];
+int			sizeofline;
+int			i;
 
-	i = 0;
-	//случай с концом строки
-	//**line = '\0';
-	while (!ft_strchr(new[fd], "\n") && read(fd, &buf, BUFF_SIZE))  //ошибка чтения?
-		new[fd] = ft_strjoin(new[fd], &buf);  //освободить память???
-	while (*new[fd] != '\n') //если нет \n???
+//read(...) < 0
+
+while (read(fd, &buf, BUFF_SIZE) >= 0)
+{
+	new = ft_strjoin(new, buf);
+	if (ft_strchr(new[fd], "\n"))
 	{
-		*line[i] == *new[fd];
-		i++;
-		new[fd]++;
+		i = 0;
+		while (*new[fd] != '\n')
+		{
+			*line[i] == *new[fd];
+			i++;
+			free(new[fd]);  //??
+			new[fd]++;  //очистить new?
+		}
+		if (*new[fd] == '\n')
+			new[fd]++;
+		return (1);
 	}
-	if (*new[fd] == '\n')
-		new[fd]++;	
+	if (!new[fd] && read(fd, &buf, BUFF_SIZE) == 0)
+		return (0);
+	if (read(fd, &buf, BUFF_SIZE) == 0)
+	{
+		line = ft_strcpy(line, new);
+		ft_strdel(new);
+		return (1);
+	}
+}
 
 /*
  1) считываем в buf кусок файла размером BUFF_SIZE;
