@@ -6,7 +6,7 @@
 /*   By: ggorilla <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 18:40:55 by ggorilla          #+#    #+#             */
-/*   Updated: 2019/10/28 22:17:42 by ggorilla         ###   ########.fr       */
+/*   Updated: 2019/11/10 19:47:12 by ggorilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,21 @@ int get_next_line(const int fd, char **line)
 	char		buf[BUFF_SIZE];
 	static char	*new[12000];
 	int			sizeofline;
+	int			i;
 
-	//случай с концоом строки
+	i = 0;
+	//случай с концом строки
 	//**line = '\0';
-	while (!ft_strchr(new[fd], "\n") && read(fd, &buf, BUFF_SIZE))
+	while (!ft_strchr(new[fd], "\n") && read(fd, &buf, BUFF_SIZE))  //ошибка чтения?
 		new[fd] = ft_strjoin(new[fd], &buf);  //освободить память???
-	*line = ft_strdup(new[fd]);
-	sizeofline = ft_strlen(*line);
-	while (*line[sizeofline] != '\n')
-	{
-		*line[sizeofline - 1] = '\0';
-		sizeofline --;
-	} //стираем с line все, что после \n, включая этот \n; можно вынести в отдельную функцию
 	while (*new[fd] != '\n') //если нет \n???
+	{
+		*line[i] == *new[fd];
+		i++;
 		new[fd]++;
-	new[fd]++; //стираем с new все до \n вместе с ним
-
-	
+	}
+	if (*new[fd] == '\n')
+		new[fd]++;	
 
 /*
  1) считываем в buf кусок файла размером BUFF_SIZE;
