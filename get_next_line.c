@@ -6,7 +6,7 @@
 /*   By: ggorilla <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 18:40:55 by ggorilla          #+#    #+#             */
-/*   Updated: 2019/11/10 20:52:50 by ggorilla         ###   ########.fr       */
+/*   Updated: 2019/11/17 20:30:36 by ggorilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,13 @@ while (read(fd, &buf, BUFF_SIZE) >= 0)
 	if (ft_strchr(new[fd], "\n"))
 	{
 		i = 0;
-		while (*new[fd] != '\n')
+		while (new[fd][i] != '\n') //переписать это говно, перекидывать все в new к началу
 		{
-			*line[i] == *new[fd];
+			*line[i] == new[fd][i];
 			i++;
-			free(new[fd]);  //??
-			new[fd]++;  //очистить new?
 		}
-		if (*new[fd] == '\n')
-			new[fd]++;
+		free(*new[fd]);
+		new[fd]++;
 		return (1);
 	}
 	if (!new[fd] && read(fd, &buf, BUFF_SIZE) == 0)
