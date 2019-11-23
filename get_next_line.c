@@ -6,7 +6,7 @@
 /*   By: ggorilla <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 18:40:55 by ggorilla          #+#    #+#             */
-/*   Updated: 2019/11/23 17:44:36 by ggorilla         ###   ########.fr       */
+/*   Updated: 2019/11/23 18:38:48 by ggorilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,46 @@
 
 char		buf[BUFF_SIZE];
 static char	*new[12000];
-int			sizeofline;
+//int		sizeofline;
 int			i;
 
 //read(...) < 0
 
-while (read(fd, &buf, BUFF_SIZE) >= 0)
+int		ft_symb_no(char *a, char b)
 {
-	new = ft_strjoin(new, buf);
-	if (ft_strchr(new[fd], "\n"))
-	{//перекинуть все до \n в line, очистить new[fd] до \n
-		/*i = 0;
-		while (new[fd][i] != '\n') //переписать это говно, перекидывать все в new к началу
-		{
-			*line[i] == new[fd][i];
-			i++;
-		}
-		free(*new[fd]);
-		new[fd]++;*/
-		return (1);
-	}
-	else if (!new[fd] && read(fd, &buf, BUFF_SIZE) == 0) //случай, когда что?
-		return (0);
-	else if (read(fd, &buf, BUFF_SIZE) == 0) //случай, когда весь файл - одна строка, нет ни одного \n
+	int i;
+
+	i = 0;
+	while (a[i] != b)
+		i++;
+	return i;
+}
+
+void	ft_move(char *a, int i)
+{
+	
+}
+
+int		main()
+{
+	while (read(fd, &buf, BUFF_SIZE) >= 0)
 	{
-		line = ft_strcpy(line, new);
-		ft_strdel(new);
-		return (1);
+		new[fd] = ft_strjoin(new[fd], buf);
+		if (ft_strchr(new[fd], "\n"))
+		{//перекинуть все до \n в line, очистить new[fd] до \n
+			i = ft_symb_no(new[fd], '\n');
+			line = ft_strncpy(line, new[fd], i);
+
+			return (1);
+		}
+		else if (!new[fd] && read(fd, &buf, BUFF_SIZE) == 0) //случай, когда что?
+			return (0);
+		else if (read(fd, &buf, BUFF_SIZE) == 0) //случай, когда весь файл - одна строка, нет ни одного \n
+		{
+			line = ft_strcpy(line, new);
+			ft_strdel(new);
+			return (1);
+		}
 	}
 }
 
