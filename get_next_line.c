@@ -6,7 +6,7 @@
 /*   By: ggorilla <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 18:40:55 by ggorilla          #+#    #+#             */
-/*   Updated: 2019/11/23 23:42:59 by ggorilla         ###   ########.fr       */
+/*   Updated: 2019/11/24 00:14:41 by ggorilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int		ft_symb_no(char *a, char b)
 	return i;
 }
 
-int		main()
+int     get_next_line(const int fd, char **line)
 {
 	while (read(fd, &buf, BUFF_SIZE) >= 0)
 	{
