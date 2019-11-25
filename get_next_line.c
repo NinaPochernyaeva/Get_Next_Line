@@ -6,7 +6,7 @@
 /*   By: ggorilla <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 18:40:55 by ggorilla          #+#    #+#             */
-/*   Updated: 2019/11/25 19:15:23 by ggorilla         ###   ########.fr       */
+/*   Updated: 2019/11/25 19:57:20 by ggorilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	get_next_line(const int fd, char **line)
 		else if (read(fd, &buf, BUFF_SIZE) == 0) //дочитали
 		{
 			*line = ft_strcpy(*line, new[fd]);
-			ft_strdel(new[fd]);
+			ft_strdel(&new[fd]);
 			return (0);
 		}
 	}
