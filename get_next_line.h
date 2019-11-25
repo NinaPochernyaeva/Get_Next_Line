@@ -13,7 +13,7 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# define BUFF_SIZE 15
+# define BUFF_SIZE 100
 
 # include "fcntl.h"
 # include "sys/types.h"
@@ -22,6 +22,7 @@
 # include <stdlib.h>
 # include "libft/libft.h"
 
-int		ft_symb_no(char *a, char b);
+static int	write_to_line(char **line, char **new, int fd);
+static int	read_from_file(int fd, char **new);
 int		get_next_line(const int fd, char **line);
 #endif

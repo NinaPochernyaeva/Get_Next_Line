@@ -12,39 +12,73 @@
 
 #include "get_next_line.h"
 
-char		buf[BUFF_SIZE];
-static char	*new[12000];
-int			i;
-
-int	ft_symb_no(char *a, char b)
+static int	write_to_line(char **line, char **new, int fd)
 {
-	int i;
+	char	*new_new;
+	int		i;
+	int		j;
 
 	i = 0;
-	while (a[i] != b)
+	while (new[fd][i] != '\0' && new[fd][i] != '\n')
 		i++;
-	return (i);
+	if ((*line = ft_strsub(new[fd], 0, i)) == NULL)
+		return (-1);
+	i++;
+	j = 0;
+	while (new[fd][i + j] != '\0')
+		j++;
+	new_new = ft_strsub(new[fd], i, j);
+	free(new[fd]);
+	new[fd] = new_new;
+	return (1);
 }
 
-int	get_next_line(const int fd, char **line)
+static int	read_from_file(int fd, char **new)
 {
-	if (fd < 0 || fd > 10240 || line == NULL || read(fd, NULL, 0) < 0)
-		return (-1); //случаи ошибок
-	while (read(fd, &buf, BUFF_SIZE) >= 0)
+	char	buf[BUFF_SIZE + 1];
+	int		r;
+	char	*new_new;
+
+	r = 0;
+	while ((r = read(fd, buf, BUFF_SIZE)) > 0)
 	{
-		new[fd] = ft_strjoin(new[fd], buf);
-		if (ft_strchr(new[fd], '\n'))
+		buf[r] = '\0';
+		if (!new[fd])
 		{
-			i = ft_symb_no(new[fd], '\n');
-			*line = ft_strncpy(*line, new[fd], i);
-			new[fd] = ft_strsub(new[fd], i + 1, ft_strlen(new[fd]) - i - 1);
+			if (!(new[fd] = ft_strdup(buf)))
+				return (-1);
+		}
+		else
+		{
+			if (!(new_new = ft_strjoin(new[fd], buf)))
+				return (-1);
+			free(new[fd]);
+			new[fd] = new_new;
+		}
+		if (ft_strchr(new[fd], '\n') != NULL)
 			return (1);
-		}
-		else if (read(fd, &buf, BUFF_SIZE) == 0) //дочитали
-		{
-			*line = ft_strcpy(*line, new[fd]);
-			ft_strdel(&new[fd]);
+	}
+	return (0);
+}
+
+int			get_next_line(const int fd, char **line)
+{
+	static char	*new[10240];
+	int			r;
+	int			rr;
+
+	if (fd < 0 || fd > 10240 || read(fd, NULL, 0) < 0)
+		return (-1);
+	r = 0;
+	if (new[fd] != NULL && ft_strchr(new[fd], '\n') != NULL)
+		return (write_to_line(line, new, fd));
+	else
+	{
+		if ((r = read_from_file(fd, new)) == -1)
+			return (r);
+		if (r == 0 && (new[fd] == NULL || new[fd][0] == '\0'))
 			return (0);
-		}
+		rr = write_to_line(line, new, fd);
+		return (rr);
 	}
 }
