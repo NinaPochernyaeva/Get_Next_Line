@@ -65,7 +65,6 @@ int			get_next_line(const int fd, char **line)
 {
 	static char	*new[10240];
 	int			r;
-	int			rr;
 
 	if (fd < 0 || fd > 10240 || read(fd, NULL, 0) < 0)
 		return (-1);
@@ -76,9 +75,9 @@ int			get_next_line(const int fd, char **line)
 	{
 		if ((r = read_from_file(fd, new)) == -1)
 			return (r);
+//		write_to_line(line, new, fd)
 		if (r == 0 && (new[fd] == NULL || new[fd][0] == '\0'))
 			return (0);
-		rr = write_to_line(line, new, fd);
-		return (rr);
+		return (write_to_line(line, new, fd));
 	}
 }
