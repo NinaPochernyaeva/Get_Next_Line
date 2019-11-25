@@ -63,11 +63,9 @@ static int	read_from_file(int fd, char **new)
 
 int			get_next_line(const int fd, char **line)
 {
-	static const unsigned int	MAX_FD_SIZE;
 	static char					*new[10240];
 	int							r;
 
-	MAX_FD_SIZE = 10240;
 	if (fd < 0 || fd > 10240 || read(fd, NULL, 0) < 0)
 		return (-1);
 	r = 0;
