@@ -73,14 +73,11 @@ int			get_next_line(const int fd, char **line)
 	r = 0;
 	if (new[fd] != NULL && ft_strchr(new[fd], '\n') != NULL)
 		return (write_to_line(line, new, fd));
-	else
-	{
-		r = read_from_file(fd, new);
-		if ((r == -1)
-			return (r);
-//		write_to_line(line, new, fd)
-		if (r == 0 && (new[fd] == NULL || new[fd][0] == '\0'))
-			return (0);
-		return (write_to_line(line, new, fd));
-	}
+	r = read_from_file(fd, new);
+	if ((r == -1)
+		return (r);
+//	write_to_line(line, new, fd)
+	if (r == 0 && (new[fd] == NULL || new[fd][0] == '\0'))
+		return (0);
+	return (write_to_line(line, new, fd));
 }
