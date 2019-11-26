@@ -11,65 +11,59 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-int	mem_to_line(char **mem, char **line, int fd)
+int	new_to_line(char **new, char **line, int fd)
 {
 	int i;
 
 	i = 0;
-	while (mem[fd][i] != '\n' && mem[fd][i] != '\0')
+	while (new[fd][i] != '\n' && new[fd][i] != '\0')
 		i++;
-	*line = ft_strsub(mem[fd], 0, i);
-	if (*line == NULL)
+	if ((*line = ft_strsub(new[fd], 0, i)) == NULL)
 		return (-1);
-	if (mem[fd][i] != '\0')
-		mem[fd] = ft_strsubfree(&(mem[fd]), i + 1,
-								ft_strlen(mem[fd]) - i - 1);
-	if (*(mem[fd]) == '\0')
-		ft_strdel(&(mem[fd]));
+	if (new[fd][i] != '\0')
+		new[fd] = ft_strsubfree(&(new[fd]), i + 1,
+								ft_strlen(new[fd]) - i - 1);
+	if (*(new[fd]) == '\0')
+		ft_strdel(&(new[fd]));
 	return (1);
 }
 
-int	buf_to_mem(char *buf, char **line, char **mem, const int fd)
+int	buf_to_new(char *buf, char **line, char **new, const int fd)
 {
-	if (mem[fd] == NULL)
+	if (new[fd] == NULL)
 	{
-		mem[fd] = ft_strdup((const char *)buf);
-		if (mem[fd] == NULL)
+		if ((new[fd] = ft_strdup(buf)) == NULL)
 			return (-1);
 	}
-	else
-	{
-		mem[fd] = ft_strjoinfree(&(mem[fd]), (const char *)buf);
-		if (!mem[fd])
-			return (-1);
-	}
-	if (ft_strchr(mem[fd], '\n') != NULL)
-		return (mem_to_line(mem, line, fd));
+	else if (!(new[fd] = ft_strjoinfree1(new[fd], buf)))
+		return (-1);
+	if (ft_strchr(new[fd], '\n'))
+		return (new_to_line(new, line, fd));
 	return (-2);
 }
 
 int	get_next_line(const int fd, char **line)
 {
 	char		buf[BUFF_SIZE + 1];
-	static char	*mem[11000];
+	static char	*new[11000];
 	int			ret;
 	int			ret1;
 	int 		ret2;
 
 	if (fd < 0 || fd > 10999 || read(fd, NULL, 0) < 0)
 		return (-1);
-	if (mem[fd] != NULL && ft_strchr(mem[fd], '\n') != NULL)
-		return (mem_to_line(mem, line, fd));
+	if (new[fd] != NULL && ft_strchr(new[fd], '\n') != NULL)
+		return (new_to_line(new, line, fd));
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[ret] = '\0';
-		ret1 = buf_to_mem(buf, line, mem, fd);
+		ret1 = buf_to_new(buf, line, new, fd);
 		if (ret1 != -2)
 			return (ret1);
 	}
-	if (ret == 0 && (mem[fd] == NULL || mem[fd][0] == '\0'))
+	if (ret == 0 && (new[fd] == NULL || new[fd][0] == '\0'))
 		return (0);
-	ret2 = mem_to_line(mem, line, fd);
-	ft_strdel(&(mem[fd]));
+	ret2 = new_to_line(new, line, fd);
+	ft_strdel(&(new[fd]));
 	return (ret2);
 }
