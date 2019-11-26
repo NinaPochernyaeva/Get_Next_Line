@@ -13,16 +13,15 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# define BUFF_SIZE 100
+# define BUFF_SIZE 40
 
-# include "fcntl.h"
-# include "sys/types.h"
-# include "sys/uio.h"
-# include "unistd.h"
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/uio.h>
+# include <unistd.h>
 # include <stdlib.h>
 # include "libft/libft.h"
 
-static int	write_to_line(char **line, char **new, int fd);
-static int	read_from_file(int fd, char **new);
 int		get_next_line(const int fd, char **line);
+
 #endif

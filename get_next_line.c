@@ -11,71 +11,65 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-static int	write_to_line(char **line, char **new, int fd)
+int	mem_to_line(char **mem, char **line, int fd)
 {
-	char	*new_new;
-	int		i;
-	int		j;
+	int i;
 
 	i = 0;
-	while (new[fd][i] != '\0' && new[fd][i] != '\n')
+	while (mem[fd][i] != '\n' && mem[fd][i] != '\0')
 		i++;
-	if ((*line = ft_strsub(new[fd], 0, i)) == NULL)
+	*line = ft_strsub(mem[fd], 0, i);
+	if (*line == NULL)
 		return (-1);
-	i++;
-	j = 0;
-	while (new[fd][i + j] != '\0')
-		j++;
-	new_new = ft_strsub(new[fd], i, j);
-	free(new[fd]);
-	new[fd] = new_new;
+	if (mem[fd][i] != '\0')
+		mem[fd] = ft_strsubfree(&(mem[fd]), i + 1,
+								ft_strlen(mem[fd]) - i - 1);
+	if (*(mem[fd]) == '\0')
+		ft_strdel(&(mem[fd]));
 	return (1);
 }
 
-static int	read_from_file(int fd, char **new)
+int	buf_to_mem(char *buf, char **line, char **mem, const int fd)
 {
-	char	buf[BUFF_SIZE + 1];
-	int		r;
-	char	*new_new;
-
-	r = 0;
-	while ((r = read(fd, buf, BUFF_SIZE)) > 0)
+	if (mem[fd] == NULL)
 	{
-		buf[r] = '\0';
-		if (!new[fd])
-		{
-			if (!(new[fd] = ft_strdup(buf)))
-				return (-1);
-		}
-		else
-		{
-			if (!(new_new = ft_strjoin(new[fd], buf)))
-				return (-1);
-			free(new[fd]);
-			new[fd] = new_new;
-		}
-		if (ft_strchr(new[fd], '\n') != NULL)
-			return (1);
+		mem[fd] = ft_strdup((const char *)buf);
+		if (mem[fd] == NULL)
+			return (-1);
 	}
-	return (0);
+	else
+	{
+		mem[fd] = ft_strjoinfree(&(mem[fd]), (const char *)buf);
+		if (!mem[fd])
+			return (-1);
+	}
+	if (ft_strchr(mem[fd], '\n') != NULL)
+		return (mem_to_line(mem, line, fd));
+	return (-2);
 }
 
-int			get_next_line(const int fd, char **line)
+int	get_next_line(const int fd, char **line)
 {
-	static char					*new[10240];
-	int							r;
+	char		buf[BUFF_SIZE + 1];
+	static char	*mem[11000];
+	int			ret;
+	int			ret1;
+	int 		ret2;
 
-	if (fd < 0 || fd > 10240 || read(fd, NULL, 0) < 0)
+	if (fd < 0 || fd > 10999 || read(fd, NULL, 0) < 0)
 		return (-1);
-	r = 0;
-	if (new[fd] != NULL && ft_strchr(new[fd], '\n') != NULL)
-		return (write_to_line(line, new, fd));
-	r = read_from_file(fd, new);
-	if ((r == -1)
-		return (r);
-//	write_to_line(line, new, fd)
-	if (r == 0 && (new[fd] == NULL || new[fd][0] == '\0'))
+	if (mem[fd] != NULL && ft_strchr(mem[fd], '\n') != NULL)
+		return (mem_to_line(mem, line, fd));
+	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
+	{
+		buf[ret] = '\0';
+		ret1 = buf_to_mem(buf, line, mem, fd);
+		if (ret1 != -2)
+			return (ret1);
+	}
+	if (ret == 0 && (mem[fd] == NULL || mem[fd][0] == '\0'))
 		return (0);
-	return (write_to_line(line, new, fd));
+	ret2 = mem_to_line(mem, line, fd);
+	ft_strdel(&(mem[fd]));
+	return (ret2);
 }
