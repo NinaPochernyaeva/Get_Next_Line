@@ -23,16 +23,16 @@ int	new_to_line(char **new, char **line, int fd)
 	if (new[fd][i] != '\0')
 		new[fd] = ft_strsubfree(&(new[fd]), i + 1,
 								ft_strlen(new[fd]) - i - 1);
-	if (*(new[fd]) == '\0')
+	if ((new[fd][i]) == '\0')
 		ft_strdel(&(new[fd]));
 	return (1);
 }
 
 int	buf_to_new(char *buf, char **line, char **new, const int fd)
 {
-	if (new[fd] == NULL)
+	if (!new[fd])
 	{
-		if ((new[fd] = ft_strdup(buf)) == NULL)
+		if (!(new[fd] = ft_strdup(buf)))
 			return (-1);
 	}
 	else if (!(new[fd] = ft_strjoinfree1(new[fd], buf)))
@@ -52,13 +52,12 @@ int	get_next_line(const int fd, char **line)
 
 	if (fd < 0 || fd > 10999 || read(fd, NULL, 0) < 0)
 		return (-1);
-	if (new[fd] != NULL && ft_strchr(new[fd], '\n') != NULL)
+	if (new[fd] && ft_strchr(new[fd], '\n'))
 		return (new_to_line(new, line, fd));
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[ret] = '\0';
-		ret1 = buf_to_new(buf, line, new, fd);
-		if (ret1 != -2)
+		if ((ret1 = buf_to_new(buf, line, new, fd)) != -2)
 			return (ret1);
 	}
 	if (ret == 0 && (new[fd] == NULL || new[fd][0] == '\0'))

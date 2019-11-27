@@ -30,13 +30,3 @@ stdlib.h
 unistd.h
 -
 
-/Users/ggorilla/GNL/main.c
-stdio.h
--
-get_next_line.h
-/Users/ggorilla/GNL/get_next_line.h
-fcntl.h
--
-stdio.h
--
-
