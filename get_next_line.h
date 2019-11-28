@@ -6,14 +6,14 @@
 /*   By: ggorilla <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 23:53:49 by ggorilla          #+#    #+#             */
-/*   Updated: 2019/11/25 17:55:34 by ggorilla         ###   ########.fr       */
+/*   Updated: 2019/11/27 19:42:29 by ggorilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# define BUFF_SIZE 1
+# define BUFF_SIZE 198
 
 # include <fcntl.h>
 # include <sys/types.h>
